@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sala Livre — Encontre sua sala. Facilite seu caminho. Plataforma universitária para localização de salas de aula.">
+  <title>Sala Livre — Encontre sua sala</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/map.css">
+
+  <!-- Favicon (inline SVG data URI) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect rx='8' width='32' height='32' fill='%230f172a'/><text x='16' y='22' text-anchor='middle' fill='%2314b8a6' font-size='18' font-family='Arial' font-weight='bold'>S</text></svg>">
+</head>
+<body>
+
+  <!-- ======== HEADER / NAVEGAÇÃO ======== -->
+  <header class="header" id="app-header">
+    <div class="header__inner">
+      <!-- Logo -->
+      <a href="#dashboard" class="header__logo" aria-label="Sala Livre - Página inicial">
+        <svg class="header__logo-icon" viewBox="0 0 24 24" fill="none" width="28" height="28">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#14b8a6"/>
+          <circle cx="12" cy="9" r="3" fill="#0f172a"/>
+        </svg>
+        <span class="header__logo-text">Sala<strong>Livre</strong></span>
+      </a>
+
+      <!-- Navegação Desktop -->
+      <nav class="header__nav" id="main-nav" aria-label="Navegação principal">
+        <a href="#dashboard" class="header__link" data-page="dashboard">
+          <svg viewBox="0 0 20 20" width="18" height="18" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="#mapa" class="header__link" data-page="mapa">
+          <svg viewBox="0 0 20 20" width="18" height="18" fill="currentColor"><path fill-rule="evenodd" d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l2.293 2.293A1 1 0 0018 16V6a1 1 0 00-.293-.707z" clip-rule="evenodd"/></svg>
+          <span>Mapa</span>
+        </a>
+        <a href="#grade" class="header__link" data-page="grade">
+          <svg viewBox="0 0 20 20" width="18" height="18" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
+          <span>Grade</span>
+        </a>
+        <a href="#salas" class="header__link" data-page="salas">
+          <svg viewBox="0 0 20 20" width="18" height="18" fill="currentColor"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838l-2.727 1.17 1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0z"/></svg>
+          <span>Salas</span>
+        </a>
+        <a href="#buscar" class="header__link" data-page="buscar">
+          <svg viewBox="0 0 20 20" width="18" height="18" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+          <span>Buscar</span>
+        </a>
+      </nav>
+
+      <!-- Perfil + Hamburger -->
+      <div class="header__right">
+        <button class="header__profile" aria-label="Perfil do usuário" id="profile-btn">
+          <span class="header__avatar" id="user-avatar">LS</span>
+        </button>
+        <button class="header__hamburger" id="hamburger-btn" aria-label="Abrir menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ======== OVERLAY MOBILE ======== -->
+  <div class="header__overlay" id="nav-overlay"></div>
+
+  <!-- ======== CONTEÚDO PRINCIPAL ======== -->
+  <main class="main" id="app-content">
+    <!-- Conteúdo das páginas será injetado aqui via JS -->
+  </main>
+
+  <!-- ======== MODAL CONTAINER ======== -->
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" id="modal-content">
+      <!-- Modal content será injetado via JS -->
+    </div>
+  </div>
+
+  <!-- ======== SCRIPTS ======== -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/pages.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/lostMode.js"></script>
+</body>
+</html>

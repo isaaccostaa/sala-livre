@@ -1,0 +1,1007 @@
+/* ============================================================
+   SALA LIVRE — Mapa Interativo
+   Estilos da planta do campus universitário.
+   ============================================================ */
+
+/* ── PAGE LAYOUT ── */
+.map-page {
+  max-width: 100%;
+  padding: 0;
+  animation: pageIn 0.3s ease;
+}
+
+.map-page__toolbar {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 20px var(--spacing);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.map-page__search {
+  flex: 1;
+  min-width: 200px;
+  max-width: 320px;
+}
+
+.map-page__floors {
+  display: flex;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+}
+
+.map-page__floor-btn {
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all var(--transition);
+  border-right: 1px solid var(--border);
+  white-space: nowrap;
+}
+.map-page__floor-btn:last-child { border-right: none; }
+.map-page__floor-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+.map-page__floor-btn.active {
+  background: var(--teal);
+  color: white;
+}
+
+.map-page__legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.map-page__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.map-page__legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid;
+}
+.map-page__legend-dot--livre    { background: var(--green-bg);  border-color: var(--green); }
+.map-page__legend-dot--ocupada  { background: var(--red-bg);    border-color: var(--red); }
+.map-page__legend-dot--reservada{ background: var(--yellow-bg); border-color: var(--yellow); }
+
+
+/* ── MAP CONTAINER (scrollable + zoomable) ── */
+.map-container {
+  background: var(--bg-body);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: auto;
+  position: relative;
+  min-height: 500px;
+  max-height: calc(100vh - var(--header-height) - 160px);
+  cursor: grab;
+}
+.map-container:active { cursor: grabbing; }
+
+.map-container__zoom {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.map-container__zoom-btn {
+  width: 36px;
+  height: 36px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition);
+}
+.map-container__zoom-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+
+/* ── MAP VIEW CONTAINER & SIDE PANEL ── */
+.map-view-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.map-detail {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 320px;
+  max-width: calc(100% - 32px);
+  z-index: 40;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  transform: translateX(120%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+  display: block;
+}
+.map-detail.visible {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.map-detail__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.map-detail__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.map-detail__location {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.map-detail__close {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+.map-detail__close:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.map-detail__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.map-detail__item {
+  background: var(--bg-body);
+  border-radius: var(--radius-md);
+  padding: 8px 10px;
+  text-align: center;
+}
+.map-detail__item-label {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.map-detail__item-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.map-detail__next-class {
+  background: var(--teal-subtle);
+  border: 1px solid rgba(20, 184, 166, 0.2);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  margin-bottom: 14px;
+}
+.map-detail__next-class-label {
+  font-size: 10px;
+  color: var(--teal-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.map-detail__next-class h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.map-detail__next-class p {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.map-detail__actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Inner wrapper for zoom transform */
+.map-wrapper {
+  min-width: 900px;
+  min-height: 650px;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.2s ease;
+}
+
+
+/* ── CAMPUS GROUND (Planta Universitária) ── */
+.campus {
+  position: relative;
+  width: 900px;
+  height: 650px;
+  margin: 20px auto;
+  background: #edf4ed;
+  border-radius: var(--radius-xl);
+  border: 2px solid #b2c8b2;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+/* Texture & Lawn grid */
+.campus::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(34, 197, 94, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 197, 94, 0.05) 1px, transparent 1px);
+  background-size: 30px 30px;
+  pointer-events: none;
+}
+
+/* Outdoor elements: plaza, gardens, trees, benches */
+.campus__plaza {
+  position: absolute;
+  top: 54%;
+  left: 32%;
+  width: 36%;
+  height: 22%;
+  background: #e2e8f0;
+  border-radius: var(--radius-lg);
+  border: 1px dashed #cbd5e1;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.campus__plaza-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.campus__garden {
+  position: absolute;
+  background: #dcfce7;
+  border: 1px solid #bbf7d0;
+  border-radius: var(--radius-md);
+  z-index: 1;
+  pointer-events: none;
+}
+.campus__garden--1 { top: 4%; left: 34%; width: 33%; height: 3%; }
+.campus__garden--2 { top: 78%; left: 36%; width: 22%; height: 3%; }
+
+.campus__tree {
+  position: absolute;
+  font-size: 16px;
+  z-index: 4;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
+  user-select: none;
+}
+
+.campus__bench {
+  position: absolute;
+  font-size: 13px;
+  z-index: 4;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.85;
+}
+
+
+/* ── PATHWAYS ── */
+.campus__path {
+  position: absolute;
+  background: #e2e8f0;
+  border: 1px solid #cbd5e1;
+  border-radius: 3px;
+  z-index: 1;
+}
+
+/* Main vertical path (entrance to horizontal corridor) */
+.campus__path--main-v {
+  left: 50%;
+  transform: translateX(-50%);
+  width: 26px;
+  top: 56%;
+  height: 38%;
+  background: repeating-linear-gradient(0deg, #e2e8f0, #e2e8f0 10px, #cbd5e1 10px, #cbd5e1 11px);
+}
+/* Horizontal corridor connecting blocks */
+.campus__path--h1 {
+  top: 56%;
+  left: 4%;
+  width: 92%;
+  height: 20px;
+  background: repeating-linear-gradient(90deg, #e2e8f0, #e2e8f0 10px, #cbd5e1 10px, #cbd5e1 11px);
+}
+/* Vertical connector: Block A down to corridor */
+.campus__path--left-v {
+  left: 17%;
+  top: 52%;
+  width: 16px;
+  height: 5%;
+}
+/* Vertical connector: Block B down to corridor */
+.campus__path--right-v {
+  left: 50%;
+  top: 52%;
+  width: 16px;
+  height: 5%;
+}
+/* Connector: corridor down to Labs */
+.campus__path--to-labs {
+  left: 14%;
+  top: 58%;
+  width: 16px;
+  height: 5%;
+}
+/* Connector: corridor down to Biblioteca */
+.campus__path--to-bib {
+  left: 45%;
+  top: 58%;
+  width: 16px;
+  height: 5%;
+}
+/* Connector: corridor to Admin */
+.campus__path--to-admin {
+  left: 71%;
+  top: 58%;
+  width: 16px;
+  height: 5%;
+}
+/* Lower horizontal path */
+.campus__path--lower-h {
+  top: 79%;
+  left: 4%;
+  width: 92%;
+  height: 14px;
+}
+/* Entrance pathway */
+.campus__path--entrance {
+  left: 50%;
+  transform: translateX(-50%);
+  top: 94%;
+  width: 26px;
+  height: 6%;
+}
+
+
+/* ── BUILDINGS (Arquitetura / Planta) ── */
+.building {
+  position: absolute;
+  background: #ffffff;
+  border: 2px solid #64748b;
+  border-radius: var(--radius-md);
+  z-index: 2;
+  overflow: visible;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
+
+.building__label {
+  position: absolute;
+  top: -11px;
+  left: 12px;
+  background: var(--navy);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.04em;
+  z-index: 3;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.building__door-marker {
+  position: absolute;
+  background: #14b8a6;
+  color: white;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 2px;
+  z-index: 4;
+}
+
+/* Stairs indicator */
+.building__stairs {
+  position: absolute;
+  bottom: 6px;
+  right: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 3;
+  background: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid #cbd5e1;
+}
+
+/* Block A */
+.building--block-a {
+  left: 4%;
+  top: 8%;
+  width: 27%;
+  height: 44%;
+}
+
+/* Block B */
+.building--block-b {
+  left: 37%;
+  top: 8%;
+  width: 27%;
+  height: 44%;
+}
+
+/* Labs */
+.building--labs {
+  left: 4%;
+  top: 62%;
+  width: 22%;
+  height: 14%;
+}
+
+/* Biblioteca */
+.building--biblioteca {
+  left: 35%;
+  top: 62%;
+  width: 22%;
+  height: 14%;
+}
+
+/* Administração */
+.building--admin {
+  left: 64%;
+  top: 62%;
+  width: 16%;
+  height: 14%;
+}
+
+/* Refeitório */
+.building--refeitorio {
+  left: 4%;
+  top: 82%;
+  width: 18%;
+  height: 10%;
+}
+
+/* WC */
+.building--wc {
+  left: 26%;
+  top: 82%;
+  width: 7%;
+  height: 7%;
+}
+
+.building--wc .building__label {
+  font-size: 10px;
+  padding: 2px 6px;
+}
+
+/* Quadra */
+.building--quadra {
+  left: 62%;
+  top: 82%;
+  width: 22%;
+  height: 12%;
+  background: #eff6ff;
+  border-color: #3b82f6;
+  border-style: solid;
+}
+
+/* Estacionamento */
+.building--estacionamento {
+  left: 70%;
+  top: 3%;
+  width: 26%;
+  height: 12%;
+  background: #f8fafc;
+  border-style: dashed;
+  border-color: #94a3b8;
+}
+.building--estacionamento .building__label {
+  font-size: 10px;
+}
+
+/* Entrance */
+.campus__entrance {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--navy);
+  border-top: 3px solid var(--teal);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 22px;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  z-index: 5;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+
+
+/* ── ROOMS (Paredes de Planta Baixa) ── */
+.room {
+  position: absolute;
+  background: #fafafa;
+  border: 1.5px solid #94a3b8;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+  overflow: hidden;
+}
+
+/* Door opening notch simulation */
+.room::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 2px;
+  background: #e2e8f0;
+}
+
+.room:hover {
+  border-color: var(--teal);
+  background: #f0fdfa;
+  box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.25);
+  transform: scale(1.03);
+  z-index: 10;
+}
+
+.room.selected {
+  border-color: var(--teal);
+  background: #ccfbf1;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.35), var(--shadow-md);
+  z-index: 11;
+}
+
+.room__id {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.room__status-dot {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1px solid white;
+  z-index: 4;
+}
+.room__status-dot--livre    { background: var(--green); }
+.room__status-dot--ocupada  { background: var(--red); }
+.room__status-dot--reservada{ background: var(--yellow); }
+
+/* Room highlight (when searched/navigated) */
+@keyframes room-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.4); }
+  50%      { box-shadow: 0 0 0 8px rgba(20, 184, 166, 0.15); }
+}
+.room.highlight {
+  border-color: var(--teal);
+  background: #ccfbf1;
+  animation: room-pulse 1.5s ease infinite;
+  z-index: 12;
+}
+
+/* Room positions inside Block A */
+.building--block-a .room--1 { top: 14%; left: 5%;  width: 42%; height: 18%; }
+.building--block-a .room--2 { top: 14%; left: 53%; width: 42%; height: 18%; }
+.building--block-a .room--3 { top: 42%; left: 5%;  width: 42%; height: 18%; }
+.building--block-a .room--4 { top: 42%; left: 53%; width: 42%; height: 18%; }
+.building--block-a .room--5 { top: 68%; left: 5%;  width: 90%; height: 18%; }
+
+/* Corridor in Block A */
+.building--block-a .building__corridor {
+  top: 34%;
+  left: 4%;
+  width: 92%;
+  height: 6%;
+  background: repeating-linear-gradient(90deg, #f1f5f9, #f1f5f9 8px, #e2e8f0 8px, #e2e8f0 10px);
+  border-top: 1px solid #cbd5e1;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+/* Room positions inside Block B */
+.building--block-b .room--1 { top: 14%; left: 5%;  width: 42%; height: 18%; }
+.building--block-b .room--2 { top: 14%; left: 53%; width: 42%; height: 18%; }
+.building--block-b .room--3 { top: 42%; left: 5%;  width: 42%; height: 18%; }
+.building--block-b .room--4 { top: 42%; left: 53%; width: 42%; height: 18%; }
+.building--block-b .room--5 { top: 68%; left: 5%;  width: 90%; height: 18%; }
+
+.building--block-b .building__corridor {
+  top: 34%;
+  left: 4%;
+  width: 92%;
+  height: 6%;
+  background: repeating-linear-gradient(90deg, #f1f5f9, #f1f5f9 8px, #e2e8f0 8px, #e2e8f0 10px);
+  border-top: 1px solid #cbd5e1;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+/* Lab rooms */
+.building--labs .room--lab1 { top: 18%; left: 4%;  width: 28%; height: 64%; }
+.building--labs .room--lab2 { top: 18%; left: 36%; width: 28%; height: 64%; }
+.building--labs .room--lab3 { top: 18%; left: 68%; width: 28%; height: 64%; }
+
+
+/* Room detail panel layout is managed in .map-view-container & .map-detail */
+
+.map-detail__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.map-detail__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.map-detail__location {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.map-detail__close {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+.map-detail__close:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.map-detail__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.map-detail__item {
+  background: var(--bg-body);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  text-align: center;
+}
+.map-detail__item-label {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.map-detail__item-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.map-detail__next-class {
+  background: var(--teal-subtle);
+  border: 1px solid rgba(20, 184, 166, 0.2);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.map-detail__next-class-label {
+  font-size: 10px;
+  color: var(--teal-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+.map-detail__next-class h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.map-detail__next-class p {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.map-detail__actions {
+  display: flex;
+  gap: 10px;
+}
+
+
+/* ── SVG ROUTE OVERLAY ── */
+.map-route-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.route-path {
+  fill: none;
+  stroke: var(--teal);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  filter: drop-shadow(0 1px 3px rgba(20, 184, 166, 0.4));
+}
+
+.route-path.animate {
+  animation: drawRoute 2s ease forwards;
+}
+
+@keyframes drawRoute {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Route markers */
+.route-marker {
+  position: absolute;
+  z-index: 21;
+  pointer-events: none;
+}
+
+.route-marker--start,
+.route-marker--end {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 3px solid var(--teal);
+}
+
+.route-marker--start {
+  background: white;
+}
+
+.route-marker--end {
+  background: var(--teal);
+  animation: pulse-subtle 1.5s infinite;
+}
+
+/* Route info banner */
+.route-banner {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 12px 20px;
+  z-index: 22;
+  box-shadow: var(--shadow-lg);
+  display: none;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  animation: fadeInUp 0.3s ease;
+}
+.route-banner.visible {
+  display: flex;
+}
+.route-banner__icon {
+  width: 32px;
+  height: 32px;
+  background: var(--teal-light);
+  color: var(--teal-dark);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.route-banner__close {
+  margin-left: 8px;
+  color: var(--text-tertiary);
+  font-size: 18px;
+  padding: 4px;
+}
+.route-banner__close:hover {
+  color: var(--text-primary);
+}
+
+/* Non-interactive buildings on map (labels for library, etc.) */
+.building__icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  text-align: center;
+  pointer-events: none;
+}
+.building__icon-emoji {
+  font-size: 22px;
+  line-height: 1;
+}
+.building__icon-text {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+}
+
+
+/* ── RESPONSIVE MAP ── */
+@media (max-width: 768px) {
+  .map-page__toolbar {
+    padding: 12px 16px;
+    gap: 10px;
+  }
+  .map-page__search { max-width: 100%; min-width: unset; }
+  .map-page__legend {
+    display: none; /* legend is shown inline on mobile */
+  }
+  .map-page__floors {
+    order: -1;
+    width: 100%;
+  }
+  .map-page__floor-btn {
+    flex: 1;
+    text-align: center;
+    padding: 10px 12px;
+  }
+
+  .map-container {
+    max-height: calc(100vh - var(--header-height) - 120px);
+    min-height: 400px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .campus {
+    margin: 10px;
+  }
+
+  .map-detail {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(100%);
+    z-index: 150;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 20px;
+    background: var(--bg-card);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+  }
+  .map-detail.visible {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .map-detail__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .map-detail__actions {
+    flex-direction: row;
+  }
+  .map-detail__actions .btn {
+    flex: 1;
+  }
+
+  .route-banner {
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    transform: none;
+    font-size: 13px;
+  }
+}
+
+/* Legend mobile inline (shown below toolbar) */
+.map-page__legend-mobile {
+  display: none;
+  padding: 0 var(--spacing) 8px;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.map-page__legend-mobile .map-page__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+@media (max-width: 768px) {
+  .map-page__legend-mobile { display: flex; flex-wrap: wrap; }
+}
