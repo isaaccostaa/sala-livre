@@ -109,9 +109,10 @@ function renderSchedule() {
                  style="background: ${subject.color}12; border-color: ${subject.color}" 
                  onclick="navigateTo('mapa', {sala: '${subject.room}'})"
                  role="button" tabindex="0"
-                 aria-label="${subject.name}, ${time}, Sala ${subject.room}">
+                 aria-label="${subject.name}, ${getTimeRange(subject)}, Sala ${subject.room}">
               <span class="schedule__card-name">${subject.name}</span>
               <span class="schedule__card-prof">${subject.professor}</span>
+              <span class="schedule__card-prof">${getTimeRange(subject)}</span>
               <span class="schedule__card-room">📍 ${subject.room}</span>
             </div>
           </div>`;
@@ -140,7 +141,7 @@ function renderSchedule() {
           <div class="schedule__mobile-card-name">${sub.name}</div>
           <div class="schedule__mobile-card-prof">${sub.professor}</div>
           <div class="schedule__mobile-card-meta">
-            <span>${svgIcon('clock')} ${sub.time}</span>
+            <span>${svgIcon('clock')} ${getTimeRange(sub)}</span>
             <span>${svgIcon('pin')} ${sub.room}</span>
           </div>
         </div>`;
@@ -287,7 +288,7 @@ function renderSearch() {
           <button class="chip" onclick="quickSearch('livre')">🟢 Salas livres</button>
           <button class="chip" onclick="quickSearch('Bloco A')">🏢 Bloco A</button>
           <button class="chip" onclick="quickSearch('Bloco B')">🏢 Bloco B</button>
-          <button class="chip" onclick="quickSearch('João Silva')">👨‍🏫 Prof. João Silva</button>
+          <button class="chip" onclick="quickSearch('André')">👨‍🏫 Prof. André</button>
         </div>
       </div>
 
@@ -328,7 +329,7 @@ function performSearch() {
             <h3>${sub.name}</h3>
             <p>${sub.professor}</p>
             <div class="search-result__meta">
-              <span>${svgIcon('clock')} ${getDayLabel(sub.day)} — ${sub.time}</span>
+              <span>${svgIcon('clock')} ${getDayLabel(sub.day)} — ${getTimeRange(sub)}</span>
               <span>${svgIcon('pin')} Sala ${sub.room}</span>
             </div>
           </div>

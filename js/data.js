@@ -52,18 +52,16 @@ const AppData = {
 
   // --- Grade de aulas do semestre ---
   subjects: [
-    { id: 1,  name: 'Cálculo III',              professor: 'Prof. Carlos Santos',    room: 'A101', day: 'segunda', time: '08:00', duration: 2, color: '#6366f1' },
-    { id: 2,  name: 'Engenharia de Software',    professor: 'Prof. João Silva',       room: 'A102', day: 'segunda', time: '20:30', duration: 2, color: '#14b8a6' },
-    { id: 3,  name: 'Estrutura de Dados',        professor: 'Profa. Lucia Ferreira',  room: 'B102', day: 'terca',   time: '08:00', duration: 2, color: '#f59e0b' },
-    { id: 4,  name: 'Banco de Dados',            professor: 'Profa. Maria Oliveira',  room: 'B103', day: 'terca',   time: '14:00', duration: 2, color: '#ef4444' },
-    { id: 5,  name: 'Redes de Computadores',     professor: 'Prof. Ana Costa',        room: 'B101', day: 'quarta',  time: '10:00', duration: 2, color: '#8b5cf6' },
-    { id: 6,  name: 'Sistemas Operacionais',     professor: 'Prof. Roberto Lima',     room: 'A103', day: 'quarta',  time: '20:30', duration: 2, color: '#ec4899' },
-    { id: 7,  name: 'Inteligência Artificial',   professor: 'Prof. Pedro Mendes',     room: 'A201', day: 'quinta',  time: '16:00', duration: 2, color: '#0ea5e9' },
-    { id: 8,  name: 'Compiladores',              professor: 'Profa. Fernanda Souza',  room: 'B201', day: 'quinta',  time: '14:00', duration: 2, color: '#f97316' },
-    { id: 9,  name: 'Projeto Integrador',        professor: 'Prof. João Silva',       room: 'LAB01', day: 'sexta', time: '10:00', duration: 2, color: '#06b6d4' },
-    { id: 10, name: 'Física II',                 professor: 'Prof. Ricardo Alves',    room: 'A104', day: 'sexta',  time: '08:00', duration: 2, color: '#84cc16' },
-    { id: 11, name: 'Programação Web',           professor: 'Prof. André Santos',     room: 'LAB02', day: 'segunda', time: '14:00', duration: 2, color: '#a855f7' },
-    { id: 12, name: 'Matemática Discreta',       professor: 'Profa. Carla Lima',      room: 'B104', day: 'terca',   time: '16:00', duration: 2, color: '#64748b' },
+    { id: 1, name: 'Teste de Qualidade', professor: 'André', room: 'LAB01', day: 'segunda', time: '19:00', end: '20:20', color: '#6366f1' },
+    { id: 2, name: 'Engenharia de Software', professor: 'Mirela', room: 'A102', day: 'segunda', time: '20:40', end: '21:30', color: '#14b8a6' },
+    { id: 3, name: 'Projeto Banco de Dados II', professor: 'André', room: 'LAB02', day: 'terca', time: '19:00', end: '20:20', color: '#ef4444' },
+    { id: 10, name: 'IA Avançada', professor: 'André', room: 'B103', day: 'terca', time: '20:40', end: '21:30', color: '#f97316' },
+    { id: 4, name: 'Sistemas Operacionais', professor: 'André', room: 'LAB01', day: 'quarta', time: '19:00', end: '20:20', color: '#ec4899' },
+    { id: 5, name: 'Sistema Web', professor: 'André', room: 'LAB02', day: 'quarta', time: '20:40', end: '21:30', color: '#a855f7' },
+    { id: 6, name: 'Metodologia Científica', professor: 'Fabiana', room: 'A201', day: 'quinta', time: '19:00', end: '20:20', color: '#f59e0b' },
+    { id: 7, name: 'Estrutura de Dados Avançados I', professor: 'Felipe', room: 'B102', day: 'quinta', time: '20:40', end: '21:30', color: '#0ea5e9' },
+    { id: 8, name: 'Arquitetura de Software', professor: 'André', room: 'A102', day: 'sexta', time: '19:00', end: '20:20', color: '#8b5cf6' },
+    { id: 9, name: 'Projeto Integrado III', professor: 'Felipe', room: 'B104', day: 'sexta', time: '20:40', end: '21:30', color: '#06b6d4' },
   ],
 
   // --- Cursos disponíveis ---
@@ -79,8 +77,8 @@ const AppData = {
   // --- Próxima aula do usuário (atalho para dashboard / modo perdido) ---
   nextClass: {
     subject: 'Engenharia de Software',
-    professor: 'Prof. João Silva',
-    time: '20:30',
+    professor: 'Mirela',
+    time: '20:40',
     room: 'A102',
     block: 'A',
     floor: 1,
@@ -98,7 +96,7 @@ const AppData = {
   ],
 
   // --- Time slots para grade (auxiliar) ---
-  timeSlots: ['08:00', '10:00', '14:00', '16:00', '20:30'],
+  timeSlots: ['19:00', '20:40'],
 };
 
 
@@ -116,6 +114,10 @@ function getRoomsByFloor(floor) {
 
 function getRoomsByBlock(block) {
   return AppData.rooms.filter(r => r.block === block);
+}
+
+function getTimeRange(s) {
+  return s.end ? s.time + ' – ' + s.end : s.time;
 }
 
 function getSubjectsByDay(day) {

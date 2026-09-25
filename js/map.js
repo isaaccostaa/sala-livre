@@ -428,7 +428,7 @@ function showRoomDetail(room) {
     <div class="map-detail__next-class">
       <div class="map-detail__next-class-label">Próxima aula</div>
       <h4>${subject.name}</h4>
-      <p>${subject.professor} · ${subject.time}</p>
+      <p>${subject.professor} · ${getTimeRange(subject)}</p>
     </div>` : ''}
 
     <div class="map-detail__actions">
