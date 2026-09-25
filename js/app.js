@@ -81,6 +81,10 @@ function updateActiveNav(page) {
   document.querySelectorAll('.header__link').forEach(link => {
     link.classList.toggle('active', link.dataset.page === page);
   });
+  document.querySelectorAll('.bottom-nav__link').forEach(link => {
+    link.classList.toggle('active', link.dataset.page === page);
+    link.setAttribute('aria-current', link.dataset.page === page ? 'page' : 'false');
+  });
 }
 
 function initHeader() {
