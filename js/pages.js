@@ -46,22 +46,22 @@ function renderDashboard() {
       <!-- Estatísticas -->
       <div class="dashboard__stats">
         <div class="stat-card">
-          <div class="stat-card__icon stat-card__icon--free" aria-hidden="true">✓</div>
+          <div class="stat-card__icon stat-card__icon--free" aria-hidden="true"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-8 8a1 1 0 01-1.4 0l-4-4a1 1 0 111.4-1.4L8 12.6l7.3-7.3a1 1 0 011.4 0z" clip-rule="evenodd"/></svg></div>
           <div class="stat-card__value">${s.free}</div>
           <div class="stat-card__label">Salas livres</div>
         </div>
         <div class="stat-card">
-          <div class="stat-card__icon stat-card__icon--occ" aria-hidden="true">✕</div>
+          <div class="stat-card__icon stat-card__icon--occ" aria-hidden="true"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.3 4.3a1 1 0 011.4 0L10 8.6l4.3-4.3a1 1 0 111.4 1.4L11.4 10l4.3 4.3a1 1 0 01-1.4 1.4L10 11.4l-4.3 4.3a1 1 0 01-1.4-1.4L8.6 10 4.3 5.7a1 1 0 010-1.4z" clip-rule="evenodd"/></svg></div>
           <div class="stat-card__value">${s.occupied}</div>
           <div class="stat-card__label">Salas ocupadas</div>
         </div>
         <div class="stat-card">
-          <div class="stat-card__icon stat-card__icon--res" aria-hidden="true">◉</div>
+          <div class="stat-card__icon stat-card__icon--res" aria-hidden="true"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.4.8l3 2a1 1 0 101.2-1.6L11 9.5V6z" clip-rule="evenodd"/></svg></div>
           <div class="stat-card__value">${s.reserved}</div>
           <div class="stat-card__label">Reservadas</div>
         </div>
         <div class="stat-card">
-          <div class="stat-card__icon stat-card__icon--lab" aria-hidden="true">🔬</div>
+          <div class="stat-card__icon stat-card__icon--lab" aria-hidden="true"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M7 2a1 1 0 000 2h1v4.6L3.4 15.2A2 2 0 005.1 18h9.8a2 2 0 001.7-2.8L12 8.6V4h1a1 1 0 100-2H7zm3 4h0v3.2l.3.5 1.7 2.8H8l1.7-2.8.3-.5V6z"/></svg></div>
           <div class="stat-card__value">${s.labsAvailable}</div>
           <div class="stat-card__label">Labs disponíveis</div>
         </div>

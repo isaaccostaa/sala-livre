@@ -1,0 +1,226 @@
+/* ============================================================
+   SALA LIVRE — Polimento visual
+   Camada de refinamento sobre styles.css / map.css:
+   profundidade nos cards, header em vidro, gradientes,
+   animações de entrada e micro-interações.
+   ============================================================ */
+
+:root {
+  --teal-cyan:      #22d3ee;
+  --grad-accent:    linear-gradient(135deg, #14b8a6 0%, #0ea5e9 100%);
+  --grad-accent-hover: linear-gradient(135deg, #0d9488 0%, #0284c7 100%);
+  --ease-out:       cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Sombras em camadas, mais suaves e com leve tom azulado */
+  --shadow-card:    0 1px 2px rgba(15,23,42,0.04), 0 4px 12px -2px rgba(15,23,42,0.06), 0 12px 24px -8px rgba(15,23,42,0.05);
+  --shadow-card-hover: 0 2px 4px rgba(15,23,42,0.05), 0 12px 24px -4px rgba(15,23,42,0.10), 0 24px 40px -12px rgba(20,184,166,0.15);
+}
+
+body {
+  background:
+    radial-gradient(900px 400px at 85% -60px, rgba(20,184,166,0.10), transparent 70%),
+    radial-gradient(700px 360px at -10% 30%, rgba(14,165,233,0.06), transparent 70%),
+    var(--bg-body);
+  background-attachment: fixed;
+}
+
+
+/* ── HEADER EM VIDRO ── */
+.header {
+  background: rgba(15, 23, 42, 0.78);
+  -webkit-backdrop-filter: saturate(160%) blur(14px);
+  backdrop-filter: saturate(160%) blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: box-shadow 0.3s var(--ease-out), background 0.3s var(--ease-out);
+}
+.header.is-scrolled {
+  background: rgba(15, 23, 42, 0.9);
+  box-shadow: 0 8px 24px -8px rgba(2, 6, 23, 0.5);
+}
+.header__link.active {
+  box-shadow: inset 0 -2px 0 var(--teal);
+  background: linear-gradient(180deg, rgba(20,184,166,0.06), rgba(20,184,166,0.16));
+}
+.header__avatar {
+  background: var(--grad-accent);
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.08), 0 4px 12px rgba(14,165,233,0.35);
+}
+
+
+/* ── TIPOGRAFIA ── */
+.dashboard__greeting h1,
+.section-title {
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+.dashboard__greeting h1 {
+  font-size: 30px;
+  background: linear-gradient(90deg, var(--text-primary) 40%, var(--teal-dark));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  width: fit-content;
+}
+.dashboard__greeting p,
+.section-subtitle {
+  color: #52607a;
+}
+.stat-card__label {
+  color: #64748b;
+}
+
+
+/* ── CARDS COM PROFUNDIDADE ── */
+.card,
+.stat-card,
+.room-card,
+.dashboard__next-class {
+  border-color: rgba(226, 232, 240, 0.9);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out), border-color 0.35s var(--ease-out);
+}
+.stat-card:hover,
+.room-card:hover,
+.card--clickable:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: rgba(20, 184, 166, 0.35);
+}
+
+/* Próxima aula: brilho sutil + barra lateral em gradiente */
+.dashboard__next-class {
+  position: relative;
+  overflow: hidden;
+  border-left: 0;
+  background:
+    radial-gradient(420px 180px at 100% 0%, rgba(20,184,166,0.10), transparent 70%),
+    var(--bg-card);
+}
+.dashboard__next-class::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: linear-gradient(180deg, #14b8a6, #0ea5e9);
+}
+
+/* Ícones das estatísticas com halo */
+.stat-card__icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  transition: transform 0.35s var(--ease-out);
+}
+.stat-card:hover .stat-card__icon {
+  transform: scale(1.1) rotate(-4deg);
+}
+.stat-card__icon svg { width: 22px; height: 22px; }
+.stat-card__icon--free { box-shadow: 0 6px 16px -4px rgba(34,197,94,0.35); }
+.stat-card__icon--occ  { box-shadow: 0 6px 16px -4px rgba(239,68,68,0.30); }
+.stat-card__icon--res  { box-shadow: 0 6px 16px -4px rgba(245,158,11,0.35); }
+.stat-card__icon--lab  { box-shadow: 0 6px 16px -4px rgba(20,184,166,0.35); }
+.stat-card__value {
+  font-size: 32px;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Bloco "Está perdido?" com brilho */
+.dashboard__lost {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 16px 32px -12px rgba(15, 23, 42, 0.45);
+}
+.dashboard__lost::after {
+  content: '';
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  right: -80px;
+  top: -140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(34,211,238,0.28), transparent 65%);
+  pointer-events: none;
+}
+.dashboard__lost-content { position: relative; z-index: 1; }
+
+
+/* ── BOTÕES ── */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out), background 0.25s ease, color 0.25s ease;
+}
+.btn--primary,
+.dashboard__lost .btn--primary {
+  background: var(--grad-accent);
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.30);
+}
+.btn--primary:hover,
+.dashboard__lost .btn--primary:hover {
+  background: var(--grad-accent-hover);
+  box-shadow: 0 8px 20px rgba(14, 165, 233, 0.35);
+  transform: translateY(-2px);
+}
+.btn--primary:active { transform: translateY(0) scale(0.98); }
+.btn--secondary:hover { transform: translateY(-1px); }
+.btn--secondary:active { transform: scale(0.97); }
+
+/* Ripple criado por polish.js */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  transform: scale(0);
+  animation: ripple 0.6s ease-out forwards;
+  pointer-events: none;
+}
+.btn--secondary .ripple { background: rgba(20, 184, 166, 0.25); }
+@keyframes ripple {
+  to { transform: scale(1); opacity: 0; }
+}
+
+.chip { transition: transform 0.25s var(--ease-out), background 0.25s ease, border-color 0.25s ease, color 0.25s ease; }
+.chip:hover { transform: translateY(-1px); }
+.chip.active { background: var(--grad-accent); border-color: transparent; }
+
+
+/* ── ENTRADA ESCALONADA ── */
+.page { animation: pageIn 0.5s var(--ease-out) both; }
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Cada item aparece um pouco depois do anterior (--i definido por polish.js) */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: revealUp 0.6s var(--ease-out) forwards;
+  animation-delay: calc(var(--i, 0) * 70ms + 60ms);
+}
+@keyframes revealUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ── FOCO E SELEÇÃO ── */
+::selection { background: rgba(20, 184, 166, 0.25); }
+.input:focus,
+.select:focus {
+  box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.14);
+}
+
+
+/* ── ACESSIBILIDADE: MENOS MOVIMENTO ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
